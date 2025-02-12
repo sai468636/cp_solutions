@@ -1,0 +1,114 @@
+#include <bits/stdc++.h>
+#define int long long int
+using namespace std;
+int mod=1e9+7;
+void solve(){
+    int n,m;
+    cin>>n>>m;
+    vector<int> arr(n);
+    for(int i=0;i<n;i++){
+        cin>>arr[i];
+    }
+    vector<int> brr(m);
+    for(int i=0;i<m;i++){
+        cin>>brr[i];
+    }
+    // if m==1 check manually and return
+    if(m==1){
+       for(int i=0;i<n;i++){
+           if(arr[i]>brr[0]) arr[i]=brr[0];
+       }
+       for(int i=0;i<n;i++){
+        cout<<arr[i]<<" ";
+        }
+       cout<<endl;
+       return;
+    }
+    // finding the lexicographicaly smallest arrangement of brr
+       //first find the smallest element then get the arrangement by storing in other vector temp.
+    int mini=INT_MAX; int ind=-1;
+    for(int i=0;i<m;i++){
+        if(mini>brr[i]){
+            mini=brr[i];
+            ind=i;
+        }
+    }
+    vector<int> temp;
+    for(int i=ind;i<m;i++){
+        temp.push_back(brr[i]);
+    }
+    for(int i=0;i<ind;i++){
+        temp.push_back(brr[i]);
+    }
+    //first find the index uptil we can place the brr array i.e uptil n-m+1
+    ind=-1; int ind2=-1; 
+    for(int i=0;i<n+1-m;i++){
+        if(arr[i]>temp[0] && ind==-1){
+            ind=i;
+        }
+        if(arr[i]==temp[0]) ind2=i;
+    }
+    // if ind==-1 && ind2==-1 we can say that array itself is it's lowest lexico arrangement
+    if(ind==-1 && ind2==-1){
+        for(int i=0;i<n;i++){
+            cout<<arr[i]<<" ";
+        }
+        cout<<endl;
+        return;
+    }
+    // else if ind==-1 && ind2!=-1 we can say that we have the possibility that we can replace array from ind2
+    else if(ind==-1 && ind2!=-1){
+        int i=ind2; 
+        int k=0;
+        while(k<m && i<n && arr[i]==temp[k]){
+            i++;
+            k++;
+        }
+        if(k==m || i==n || temp[k]>arr[i]){
+            for(int i=0;i<n;i++){
+              cout<<arr[i]<<" ";
+            }
+            cout<<endl;
+            return;
+        }
+        if(arr[i]>temp[k]){
+            for(int i=ind2;i<n-m+1;i++){
+                arr[i]=temp[0];
+            }
+             int j=1;
+             for(int i=n-m+1;i<n;i++){
+                arr[i]=temp[j];
+                j++;
+             }
+             for(int i=0;i<n;i++){
+              cout<<arr[i]<<" ";
+              }
+            cout<<endl;
+            return;
+        }
+    }
+    //finally if ind!=-1 we can replace every index from ind to n-m+1 with the temp[0] and after that with the respective element of temp
+    for(int i=ind;i<n-m+1;i++){
+         arr[i]=temp[0];
+    }
+    int j=1;
+    for(int i=n-m+1;i<n;i++){
+        arr[i]=temp[j];
+        j++;
+    }
+    // output the vector for the last part
+    for(int i=0;i<n;i++){
+        cout<<arr[i]<<" ";
+    }
+    cout<<endl;
+    
+}
+signed main() {
+	// your code goes here
+	int t;
+	cin>>t;
+	while(t--){
+	    solve();
+	}
+	return 0;
+}
